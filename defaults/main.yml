@@ -1,0 +1,26 @@
+---
+
+rmq_os_package: false
+
+rmq_plugins: []
+rmq_new_only: 'no'
+
+rmq_vhost_definitions: []
+rmq_users_definitions: []
+
+rmq_cacert     : "files/rabbitmq_cacert.pem"
+rmq_server_key : "files/rabbitmq_server_key.pem"
+rmq_server_cert: "files/rabbitmq_server_cert.pem"
+rmq_ssl        : true
+
+rmq_conf_tcp_listeners_address: ''
+rmq_conf_tcp_listeners_port: 5672
+
+rmq_conf_ssl_listeners_address           : '0.0.0.0'
+rmq_conf_ssl_listeners_port              : 5671
+rmq_conf_ssl_options_cacertfile          : "/etc/rabbitmq/ssl/{{ rabbitmq_cacert | basename }}"
+rmq_conf_ssl_options_certfile            : "/etc/rabbitmq/ssl/{{ rabbitmq_server_cert | basename }}"
+rmq_conf_ssl_options_keyfile             : "/etc/rabbitmq/ssl/{{ rabbitmq_server_key | basename }}"
+rmq_conf_ssl_options_fail_if_no_peer_cert: "true"
+
+rmq_env: false

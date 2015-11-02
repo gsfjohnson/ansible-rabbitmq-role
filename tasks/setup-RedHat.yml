@@ -1,0 +1,25 @@
+---
+
+- name: install epel-release
+  yum: name=epel-release state=latest
+  when: ansible_distribution == 'CentOS' or haproxy_install_epel
+
+- name: install deps
+  yum:
+    name="{{ item }}"
+    state={{rmq_pkg_state}}
+  with_items:
+    - erlang
+    - libselinux-python
+
+- name: install pkg
+  yum:
+    name={{rmq_pkg_name}}
+    state={{rmq_pkg_state}}
+
+- name: svc start, enable
+  service:
+    name={{rmq_svc_name}}
+    state={{rmq_svc_state}}
+    enabled={{rmq_svc_enabled}}
+

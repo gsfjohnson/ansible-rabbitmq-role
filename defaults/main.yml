@@ -2,11 +2,18 @@
 
 rmq_os_package: false
 
+rmq_pkg_name: rabbitmq-server
+
+rmq_svc_name: rabbitmq-server
+
 rmq_plugins: []
 rmq_new_only: 'no'
 
-rmq_vhost_definitions: []
-rmq_users_definitions: []
+rmq_vhosts: []
+#  - name: xyz
+#    node: rabbit
+#    tracing: no
+rmq_users: []
 
 rmq_cacert     : "files/rabbitmq_cacert.pem"
 rmq_server_key : "files/rabbitmq_server_key.pem"

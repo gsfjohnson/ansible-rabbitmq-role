@@ -1,0 +1,7 @@
+---
+
+- name: svc restart rmq
+  service:
+    name: {{rmq_svc_name}}
+    state: restarted
+

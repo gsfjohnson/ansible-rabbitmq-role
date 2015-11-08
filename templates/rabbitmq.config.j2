@@ -1,0 +1,28 @@
+[
+  {rabbit, [
+{#
+   If there is a listenning address defined for the insecure TCP listenner,
+   declare it.
+#}
+{% if rmq_conf_tcp_listeners_address != '' %}
+    {tcp_listeners, [{"{{ rmq_conf_tcp_listeners_address }}", {{ rmq_conf_tcp_listeners_port }}}]}{% if rabbitmq_ssl %},
+{% endif %}
+{#
+   Otherwise, shut down the listenner.
+#}
+{% else %}
+    {tcp_listeners, []}{% if rmq_ssl %},
+{% endif %}
+{% endif %}
+{% if rmq_ssl %}
+    {ssl_listeners, [{"{{ rmq_conf_ssl_listeners_address }}", {{ rmq_conf_ssl_listeners_port }}}]},
+    {ssl_options, [
+      {cacertfile, "{{rmq_conf_ssl_options_cacertfile}}"},
+      {certfile, "{{rmq_conf_ssl_options_certfile}}"},
+      {keyfile, "{{rmq_conf_ssl_options_keyfile}}"},
+      {verify, verify_peer},
+      {fail_if_no_peer_cert,{{rmq_conf_ssl_options_fail_if_no_peer_cert}}}
+      ]}
+{% endif %}
+  ]}
+].

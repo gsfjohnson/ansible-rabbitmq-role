@@ -2,12 +2,12 @@
 
 - name: create the ssl folder for rabbitmq
   file:
-    path=/etc/rabbitmq/ssl/
+    path=/etc/rabbitmq/ssl
     owner=rabbitmq
     group=rabbitmq
     mode=0750
     state=directory
-  when: rabbitmq_ssl
+  when: rmq_ssl
 
 - name: copy the ssl certificates
   copy:
@@ -18,13 +18,13 @@
     mode=0640
     backup=yes
   with_items:
-    - src: "{{ rabbitmq_cacert }}"
-      dest: "{{ rabbitmq_conf_ssl_options_cacertfile }}"
-    - src: "{{ rabbitmq_server_key }}"
-      dest: "{{ rabbitmq_conf_ssl_options_keyfile }}"
-    - src: "{{ rabbitmq_server_cert }}"
-      dest: "{{ rabbitmq_conf_ssl_options_certfile }}"
-  when: rabbitmq_ssl
+    - src: "{{ rmq_ca_cert }}"
+      dest: "{{ rmq_conf_ssl_options_cacertfile }}"
+    - src: "{{ rmq_server_cert }}"
+      dest: "{{ rmq_conf_ssl_options_certfile }}"
+    - src: "{{ rmq_server_key }}"
+      dest: "{{ rmq_conf_ssl_options_keyfile }}"
+  when: rmq_ssl
 
 - name: generate the configuration of rabbitmq
   template:
@@ -34,7 +34,7 @@
     group=rabbitmq
     mode=0644
     backup=yes
-  notify: restart rabbitmq-server
+  notify: svc restart rmq
 
 - name: start
   service:
@@ -47,7 +47,7 @@
     node={{ item.node | default('rabbit') }}
     tracing={{ item.tracing | default('no') }}
     state=present
-  with_items: rabbitmq_vhosts
+  with_items: rmq_vhosts
 
 - name: add rabbitmq user and set privileges
   rabbitmq_user:
@@ -61,7 +61,7 @@
     write_priv={{ item.write_priv | default('.*') }}
     state=present
     force={{ item.force|default('yes') }}
-  with_items: rabbitmq_users
+  with_items: rmq_users
 
 - name: remove guest user (hostname)
   rabbitmq_user:
@@ -69,7 +69,7 @@
     vhost=/
     node="rabbit@{{ ansible_hostname }}"
     state=absent
-  register: rm_guest_hostname
+  register: rmq_guest_hostname
   ignore_errors: true
 
 - name: remove guest user (default)
@@ -77,5 +77,5 @@
     user=guest
     vhost=/
     state=absent
-  when: rm_guest_hostname|failed
+  when: rmq_guest_hostname|failed
 

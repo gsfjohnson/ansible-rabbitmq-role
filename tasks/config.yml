@@ -1,6 +1,6 @@
 ---
 
-- name: create the ssl folder for rabbitmq
+- name: create ssl dir
   file:
     path=/etc/rabbitmq/ssl
     owner=rabbitmq
@@ -9,7 +9,7 @@
     state=directory
   when: rmq_ssl
 
-- name: copy the ssl certificates
+- name: install ssl certs
   copy:
     src={{ item.src }}
     dest={{ item.dest }}
@@ -26,7 +26,7 @@
       dest: "{{ rmq_conf_ssl_options_keyfile }}"
   when: rmq_ssl
 
-- name: generate the configuration of rabbitmq
+- name: rabbitmq.config template
   template:
     src=rabbitmq.config.j2
     dest=/etc/rabbitmq/rabbitmq.config
